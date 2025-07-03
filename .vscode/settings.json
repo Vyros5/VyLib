@@ -76,6 +76,26 @@
         "unordered_map": "cpp",
         "variant": "cpp",
         "xhash": "cpp",
-        "xtree": "cpp"
+        "xtree": "cpp",
+        "any": "cpp",
+        "bitset": "cpp",
+        "cfenv": "cpp",
+        "complex": "cpp",
+        "condition_variable": "cpp",
+        "csignal": "cpp",
+        "cstdarg": "cpp",
+        "expected": "cpp",
+        "resumable": "cpp",
+        "future": "cpp",
+        "iostream": "cpp",
+        "numeric": "cpp",
+        "ostream": "cpp",
+        "random": "cpp",
+        "regex": "cpp",
+        "set": "cpp",
+        "stack": "cpp",
+        "unordered_set": "cpp",
+        "valarray": "cpp",
+        "codecvt": "cpp"
     }
 }

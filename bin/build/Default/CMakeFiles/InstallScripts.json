@@ -1,7 +1,13 @@
 {
 	"InstallScripts" : 
 	[
-		"C:/dev/VyLib/VyLib/bin/build/Default/cmake_install.cmake"
+		"C:/dev/VyLib/bin/build/Default/cmake_install.cmake",
+		"C:/dev/VyLib/bin/build/Default/vendor/glm/cmake_install.cmake",
+		"C:/dev/VyLib/bin/build/Default/vendor/glm/glm/cmake_install.cmake",
+		"C:/dev/VyLib/bin/build/Default/vendor/fmt/cmake_install.cmake",
+		"C:/dev/VyLib/bin/build/Default/vendor/json/cmake_install.cmake",
+		"C:/dev/VyLib/bin/build/Default/vendor/spdlog/cmake_install.cmake",
+		"C:/dev/VyLib/bin/build/Default/vendor/magic_enum/cmake_install.cmake"
 	],
 	"Parallel" : false
 }
