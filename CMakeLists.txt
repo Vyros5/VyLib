@@ -30,7 +30,7 @@ set(VYLIB_COMPILER_FLAGS /W0)
 
 set(VYLIB_SOURCES
 
-    include/VyLib.h
+    include/VyLib/VyLib.h
 
     include/VyLib/Prerequisites.h
     include/VyLib/ThreadPool.cpp
