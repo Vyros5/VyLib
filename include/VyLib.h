@@ -2,6 +2,8 @@
 
 #include "VyLib/Prerequisites.h"
 
+#include "VyLib/Assert/Assert.h"
+
 /* Types */
 #include "VyLib/Types/CoreTypes.h"
 #include "VyLib/Types/StringTypes.h"
