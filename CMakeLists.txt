@@ -98,8 +98,8 @@ add_subdirectory(vendor/spdlog)
 # add_subdirectory(vendor/magic_enum)
 
 
-set(VYLIB_INCLUDE
-    # ${CMAKE_CURRENT_SOURCE_DIR}/src
+set(VYLIB_INCLUDE_DIRS
+    ${VYLIB_INCLUDE_DIR}
     # ${VYLIB_VENDOR_DIR}/json/include
     # ${VYLIB_VENDOR_DIR}/magic_enum/include
     ${VYLIB_VENDOR_DIR}/spdlog/include
@@ -115,7 +115,7 @@ set(VENDOR_LIBS
     # magic_enum::magic_enum
 )
 
-target_include_directories(${PROJECT_NAME} PUBLIC ${VYLIB_INCLUDE_DIR} ${VYLIB_INCLUDE})
+target_include_directories(${PROJECT_NAME} PUBLIC ${VYLIB_INCLUDE_DIRS})
 target_link_libraries(${PROJECT_NAME} PUBLIC ${VENDOR_LIBS})
 
 target_compile_options(${PROJECT_NAME} PUBLIC ${VYLIB_COMPILER_FLAGS})
