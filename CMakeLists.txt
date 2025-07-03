@@ -93,15 +93,15 @@ add_library(Vy::Lib ALIAS ${PROJECT_NAME})
 
 add_subdirectory(vendor/glm)
 add_subdirectory(vendor/fmt)
-add_subdirectory(vendor/json)
+# add_subdirectory(vendor/json)
 add_subdirectory(vendor/spdlog)
-add_subdirectory(vendor/magic_enum)
+# add_subdirectory(vendor/magic_enum)
 
 
 set(VYLIB_INCLUDE
     # ${CMAKE_CURRENT_SOURCE_DIR}/src
-    ${VYLIB_VENDOR_DIR}/json/include
-    ${VYLIB_VENDOR_DIR}/magic_enum/include
+    # ${VYLIB_VENDOR_DIR}/json/include
+    # ${VYLIB_VENDOR_DIR}/magic_enum/include
     ${VYLIB_VENDOR_DIR}/spdlog/include
     ${VYLIB_VENDOR_DIR}/fmt/include
     ${VYLIB_VENDOR_DIR}/glm
@@ -111,8 +111,8 @@ set(VENDOR_LIBS
     glm
     fmt
     spdlog
-    nlohmann_json::nlohmann_json
-    magic_enum::magic_enum
+    # nlohmann_json::nlohmann_json
+    # magic_enum::magic_enum
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${VYLIB_INCLUDE_DIR} ${VYLIB_INCLUDE})
