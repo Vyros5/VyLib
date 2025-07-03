@@ -33,6 +33,8 @@ set(VYLIB_SOURCES
     include/VyLib.h
 
     include/VyLib/Prerequisites.h
+    include/VyLib/ThreadPool.cpp
+    include/VyLib/ThreadPool.h
 
     # Algorthms
     include/VyLib/Algorithms/Hash.h
