@@ -37,8 +37,9 @@
 *.userosscache
 *.sln.docstates
 
-/bin
+
 bin/
+
 # Project Files
 # [Gg]enerated_project_files
 [Bb]uild
