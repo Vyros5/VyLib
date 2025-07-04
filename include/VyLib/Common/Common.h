@@ -7,9 +7,10 @@
 #include <mutex>
 #include <atomic>
 
-#include "VyLib/Memory/Ptrs.h"
+#include "VyLib/Pointers/Ptrs.h"
 
 #include "VyLib/Strings/String.h"
+#include <shared_mutex>
 
 namespace Vy
 {
@@ -47,7 +48,11 @@ namespace Vy
 
     // ============================================================================================
 
-    using Mutex     = std::mutex;
+    using Mutex             = std::mutex;
+    using SharedMutex       = std::shared_mutex;
+    using RecursiveMutex    = std::recursive_mutex;
+    using ConditionVariable = std::condition_variable;
+
     using LockGuard = std::lock_guard<std::mutex>;
 
     template <typename T>

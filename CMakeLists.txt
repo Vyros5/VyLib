@@ -44,6 +44,7 @@ set(VYLIB_SOURCES
 
     # Common
     include/VyLib/Common/Common.h
+    include/VyLib/Common/Version.h
 
     # Containers
     include/VyLib/Containers/Array.h
@@ -72,8 +73,8 @@ set(VYLIB_SOURCES
     # Math
     include/VyLib/Math/Math.h
 
-    # Memory
-    include/VyLib/Memory/Ptrs.h
+    # Pointers
+    include/VyLib/Pointers/Ptrs.h
 
     # Serialization
     include/VyLib/Serialization/Endianness.h

@@ -3,7 +3,7 @@
 #include "VyLib/Types/CoreTypes.h"
 #include "VyLib/Types/StringTypes.h"
 #include "VyLib/Prerequisites.h"
-#include "VyLib/Memory/Ptrs.h"
+#include "VyLib/Pointers/Ptrs.h"
 #include "VyLib/Utils/ClassUtils.h"
 #include <fmt/core.h>
 #include <fmt/format.h>
@@ -14,6 +14,7 @@
 
 namespace Vy
 {
+
 
     class Logger
     {
@@ -32,20 +33,35 @@ namespace Vy
     };
 }
 
-#if VY_CLIENT_LOG_ENABLED
-    #define VY_TRACE(...)    Vy::Logger::GetClientLogger()->trace(__VA_ARGS__);
-    #define VY_INFO(...)     Vy::Logger::GetClientLogger()->info(__VA_ARGS__);
-    #define VY_WARN(...)     Vy::Logger::GetClientLogger()->warn(__VA_ARGS__);
-    #define VY_ERROR(...)    Vy::Logger::GetClientLogger()->error(__VA_ARGS__);
-    #define VY_CRITICAL(...) Vy::Logger::GetClientLogger()->critical(__VA_ARGS__);
+#if VY_LOG_ENABLED
+    #if VY_LIBRARY_IMPLEMENTATION
+        #define VYTRACE(...)    Vy::Logger::GetConsoleLogger()->trace(__VA_ARGS__);
+        #define VYINFO(...)     Vy::Logger::GetConsoleLogger()->info(__VA_ARGS__);
+        #define VYWARN(...)     Vy::Logger::GetConsoleLogger()->warn(__VA_ARGS__);
+        #define VYERROR(...)    Vy::Logger::GetConsoleLogger()->error(__VA_ARGS__);
+        #define VYCRITICAL(...) Vy::Logger::GetConsoleLogger()->critical(__VA_ARGS__);
+    #else
+        #define VYTRACE(...)    Vy::Logger::GetClientLogger()->trace(__VA_ARGS__);
+        #define VYINFO(...)     Vy::Logger::GetClientLogger()->info(__VA_ARGS__);
+        #define VYWARN(...)     Vy::Logger::GetClientLogger()->warn(__VA_ARGS__);
+        #define VYERROR(...)    Vy::Logger::GetClientLogger()->error(__VA_ARGS__);
+        #define VYCRITICAL(...) Vy::Logger::GetClientLogger()->critical(__VA_ARGS__);
+    #endif
 #else
-    #define VY_TRACE(...)    Vy::Logger::GetConsoleLogger()->trace(__VA_ARGS__);
-    #define VY_INFO(...)     Vy::Logger::GetConsoleLogger()->info(__VA_ARGS__);
-    #define VY_WARN(...)     Vy::Logger::GetConsoleLogger()->warn(__VA_ARGS__);
-    #define VY_ERROR(...)    Vy::Logger::GetConsoleLogger()->error(__VA_ARGS__);
-    #define VY_CRITICAL(...) Vy::Logger::GetConsoleLogger()->critical(__VA_ARGS__);
-#endif
-
+    #if VY_LIBRARY_IMPLEMENTATION
+        #define VYTRACE(...)
+        #define VYINFO(...)
+        #define VYWARN(...)
+        #define VYERROR(...)
+        #define VYCRITICAL(...)
+    #else
+        #define VYTRACE(...)
+        #define VYINFO(...)
+        #define VYWARN(...)
+        #define VYERROR(...)
+        #define VYCRITICAL(...)
+    #endif
+#endif // VY_LOG_ENABLED
 
 
 // namespace Details

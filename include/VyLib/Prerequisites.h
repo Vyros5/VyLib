@@ -5,8 +5,8 @@
 #define VY_DEBUG_MODE
 
 
-#define VY_CLIENT_LOG_ENABLED 0
-
+#define VY_LOG_ENABLED 1
+#define VY_LIBRARY_IMPLEMENTATION 1
 
 
 // Taken from https://github.com/NazaraEngine/NazaraUtils/blob/main/include/NazaraUtils/Prerequisites.hpp#L94
@@ -37,7 +37,8 @@ defined(_WIN64)
 	#define VY_PRETTY_FUNCTION                     __FUNCSIG__
 
 	#define VY_CHECK_MSVC_VER(ver)                 (VY_COMPILER_MSVC_VER >= ver)
-    #define VYINLINE                                  inline
+    #define VYINLINE                               inline
+	#define VYNODISCARD                            [[nodiscard]]
 	#define VY_PRAGMA(x)                           __pragma(x)
 
 	#define VY_WARNING_MSVC_DISABLE(...)           VY_PRAGMA(warning(disable: __VA_ARGS__))
