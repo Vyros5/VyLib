@@ -8,7 +8,7 @@
 #include <charconv>
 
 #include "VyLib/Strings/String.h"
-#include "VyLib/Prerequisites.h"
+#include "VyLib/Platform.h"
 
 namespace Vy
 {

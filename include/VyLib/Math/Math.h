@@ -1,6 +1,8 @@
 #pragma once
 
 #include <glm/glm.hpp>
+#include <glm/gtx/quaternion.hpp>
+
 #include "VyLib/Types/CoreTypes.h"
 
 /**
@@ -25,6 +27,10 @@ namespace Vy
     using Vec2d = glm::dvec2;
     using Vec3d = glm::dvec3;
     using Vec4d = glm::dvec4;
+
+    using Vec2u = glm::uvec2;
+    using Vec3u = glm::uvec3;
+    using Vec4u = glm::uvec4;
     
     using Mat2  = glm::mat2;
     using Mat3  = glm::mat3;

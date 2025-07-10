@@ -4,7 +4,7 @@
 #include <memory>
 
 #include "VyLib/Types/CoreTypes.h"
-#include "VyLib/Prerequisites.h"
+#include "VyLib/Platform.h"
 
 namespace Vy
 {

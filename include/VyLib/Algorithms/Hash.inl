@@ -2,7 +2,7 @@
 
 #include <array>
 
-#include "VyLib/Prerequisites.h"
+#include "VyLib/Platform.h"
 
 namespace Vy
 {

@@ -2,7 +2,7 @@
 
 #include "VyLib/Types/CoreTypes.h"
 #include "VyLib/Types/StringTypes.h"
-#include "VyLib/Prerequisites.h"
+#include "VyLib/Platform.h"
 
 namespace Vy
 {

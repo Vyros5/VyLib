@@ -4,7 +4,7 @@
 #include <array>
 #include <algorithm>
 
-#include "VyLib/Prerequisites.h"
+#include "VyLib/Platform.h"
 
 namespace Vy
 {

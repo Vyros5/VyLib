@@ -4,7 +4,7 @@
 #include <cstdint>
 #include <string>
 
-#include "VyLib/Prerequisites.h"
+#include "VyLib/Platform.h"
 
 /**
  * Fixed-Width Integer Types
@@ -90,7 +90,7 @@ using CVoidPtr = const void*;
 
 // ================================================================================================
 
-#if VY_64BIT_SYSTEM
+#if VY_ARCH_64BIT
     using SIZE_T  = std::size_t;
     using SSIZE_T = i64;
 #else

@@ -31,10 +31,7 @@ set(VYLIB_COMPILER_FLAGS /W0)
 set(VYLIB_SOURCES
 
     include/VyLib/VyLib.h
-
-    include/VyLib/Prerequisites.h
-    include/VyLib/ThreadPool.cpp
-    include/VyLib/ThreadPool.h
+    include/VyLib/Platform.h
 
     # Algorthms
     include/VyLib/Algorithms/Hash.h
@@ -43,7 +40,10 @@ set(VYLIB_SOURCES
     include/VyLib/Assert/Assert.h
 
     # Common
+    include/VyLib/Common/Buffer.h
     include/VyLib/Common/Common.h
+    include/VyLib/Common/UUID.cpp
+    include/VyLib/Common/UUID.h
     include/VyLib/Common/Version.h
 
     # Containers
@@ -57,6 +57,16 @@ set(VYLIB_SOURCES
     include/VyLib/Containers/Span.h
     include/VyLib/Containers/Stack.h
     include/VyLib/Containers/Vector.h
+
+    # Event
+    include/VyLib/Event/ApplicationEvent.h
+    include/VyLib/Event/Event.h
+    include/VyLib/Event/KeyEvent.h
+    include/VyLib/Event/MouseEvent.h
+
+    # Input
+    include/VyLib/Input/Input.h
+    include/VyLib/Input/InputCodes.h
 
     # IO
     include/VyLib/IO/Streams.cpp
@@ -79,16 +89,24 @@ set(VYLIB_SOURCES
     # Serialization
     include/VyLib/Serialization/Endianness.h
 
+    # Thread
+    include/VyLib/Thread/ThreadPool.cpp
+    include/VyLib/Thread/ThreadPool.h
+
     # Types
     include/VyLib/Types/CoreTypes.h
+    include/VyLib/Types/DefTypes.h
     include/VyLib/Types/StringTypes.h
 
     # Utils
     include/VyLib/Utils/ClassUtils.h
+    include/VyLib/Utils/EnumUtils.h
+    include/VyLib/Utils/HashUtils.h
+    include/VyLib/Utils/StringUtils.h
 )
 
 add_library(${PROJECT_NAME} ${VYLIB_SOURCES})
-add_library(Vy::Lib ALIAS ${PROJECT_NAME})
+# add_library(Vy::Lib ALIAS ${PROJECT_NAME})
 
 
 
@@ -96,13 +114,13 @@ add_subdirectory(vendor/glm)
 add_subdirectory(vendor/fmt)
 # add_subdirectory(vendor/json)
 add_subdirectory(vendor/spdlog)
-# add_subdirectory(vendor/magic_enum)
+add_subdirectory(vendor/magic_enum)
 
 
 set(VYLIB_INCLUDE_DIRS
     ${VYLIB_INCLUDE_DIR}
     # ${VYLIB_VENDOR_DIR}/json/include
-    # ${VYLIB_VENDOR_DIR}/magic_enum/include
+    ${VYLIB_VENDOR_DIR}/magic_enum/include
     ${VYLIB_VENDOR_DIR}/spdlog/include
     ${VYLIB_VENDOR_DIR}/fmt/include
     ${VYLIB_VENDOR_DIR}/glm

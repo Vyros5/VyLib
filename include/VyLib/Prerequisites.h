@@ -29,6 +29,8 @@ defined(_WIN64)
 
 
 /* ==================== COMPILER ==================== */
+
+// MARK: MSVC
 #if defined(_MSC_VER)
 
 	#define VY_COMPILER_MSVC
@@ -48,6 +50,7 @@ defined(_WIN64)
 	// __cplusplus isn't respected on MSVC without /Zc:__cplusplus flag
 	#define VY_CPP_VER                             _MSVC_LANG
 
+// MARK: CLANG
 #elif defined(__clang__)
 
 	#define VY_COMPILER_CLANG
@@ -64,13 +67,7 @@ defined(_WIN64)
 	#define VY_WARNING_POP()                       VY_PRAGMA(clang diagnostic pop)
 	#define VY_WARNING_PUSH()                      VY_PRAGMA(clang diagnostic push)
 
-	#ifdef __MINGW32__
-		#define VY_COMPILER_MINGW
-		#ifdef __MINGW64_VERSION_MAJOR
-			#define VY_COMPILER_MINGW_W64
-		#endif
-	#endif
-
+// MARK: GCC
 #elif defined(__GNUC__) || defined(__MINGW32__)
 
 	#define VY_COMPILER_GCC
@@ -87,13 +84,7 @@ defined(_WIN64)
 	#define VY_WARNING_POP()                       VY_PRAGMA(GCC diagnostic pop)
 	#define VY_WARNING_PUSH()                      VY_PRAGMA(GCC diagnostic push)
 
-	#ifdef __MINGW32__
-		#define VY_COMPILER_MINGW
-		#ifdef __MINGW64_VERSION_MAJOR
-			#define VY_COMPILER_MINGW_W64
-		#endif
-	#endif
-
+// MARK: ICC
 #elif defined(__INTEL_COMPILER) || defined(__ICL)
 
 	#define VY_COMPILER_ICC
@@ -114,19 +105,6 @@ defined(_WIN64)
 	#define VY_COMPILER_UNKNOWN
 
 	#pragma message This compiler is not fully supported
-#endif
-
-
-
-// Detect MinGW thread model
-#ifdef VY_COMPILER_MINGW
-	#if defined(__USING_MCFGTHREAD__)
-		#define VY_COMPILER_MINGW_THREADS_MCF
-	#elif defined(_REENTRANT)
-		#define VY_COMPILER_MINGW_THREADS_POSIX
-	#else
-		#define VY_COMPILER_MINGW_THREADS_WIN32
-	#endif
 #endif
 
 #ifndef VY_CHECK_CLANG_VER
@@ -190,7 +168,7 @@ defined(_WIN64)
 #endif
 
 
-// C++ version
+// MARK: C++ version
 #define VY_CPP98 199711L
 #define VY_CPP11 201103L
 #define VY_CPP14 201402L
@@ -204,7 +182,7 @@ defined(_WIN64)
 	#error VyLib requires C++17 or higher
 #endif
 
-// Try to identify target platform via defines
+// MARK: WIN32
 #if defined(_WIN32)
 	#define VY_PLATFORM_DESKTOP
 	#define VY_PLATFORM_WINDOWS
@@ -221,40 +199,9 @@ defined(_WIN64)
 		#ifndef NOMINMAX
 			#define NOMINMAX
 		#endif
-
-		#if VYLIBUTILS_WINDOWS_NT6
-			#define VY_WINNT 0x0600
-		#else
-			#define VY_WINNT 0x0501
-		#endif
-
-		// Keep the actual define if existing and greater than our requirement
-		#if defined(_WIN32_WINNT)
-			#if _WIN32_WINNT < VY_WINNT
-				#undef _WIN32_WINNT
-				#define _WIN32_WINNT VY_WINNT
-			#endif
-		#else
-			#define _WIN32_WINNT VY_WINNT
-		#endif
 	#endif
 
-#elif defined(__ANDROID__)
-	// android/ndk-version.h was added with NDK 16 so we should be safe, but an error is better than nothing
-	#if !__has_include(<android/ndk-version.h>)
-		#error VyLib requires a more recent Android NDK version, please update
-	#endif
-	#include <android/ndk-version.h>
-	#define VY_PLATFORM_MOBILE
-	#define VY_PLATFORM_ANDROID
-	#define VY_PLATFORM_POSIX
-
-	#define VY_PLATFORM_ANDROID_NDK_VER __NDK_MAJOR__
-	#define VY_CHECK_NDK_VER(ver) (VY_PLATFORM_ANDROID_NDK_VER >= ver)
-
-	#define VY_EXPORT __attribute__((visibility("default")))
-	#define VY_IMPORT __attribute__((visibility("default")))
-
+// MARK: LINUX
 #elif defined(__linux__)
 	#define VY_PLATFORM_DESKTOP
 	#define VY_PLATFORM_LINUX
@@ -263,29 +210,17 @@ defined(_WIN64)
 	#define VY_EXPORT __attribute__((visibility("default")))
 	#define VY_IMPORT __attribute__((visibility("default")))
 
-#elif defined(__FreeBSD__)
-	#define VY_PLATFORM_BSD
-	#define VY_PLATFORM_FREEBSD
-	#define VY_PLATFORM_POSIX
-
-	#define VY_EXPORT __attribute__((visibility("default")))
-	#define VY_IMPORT __attribute__((visibility("default")))
-
+// MARK: APPLE
 #elif defined(__APPLE__)
-	#include <TargetConditionals.h>
-	#if TARGET_OS_IPHONE
-		#define VY_PLATFORM_MOBILE
-		#define VY_PLATFORM_IOS
-	#else
-		#define VY_PLATFORM_DESKTOP
-		#define VY_PLATFORM_MACOS
-	#endif
+	#define VY_PLATFORM_DESKTOP
+	#define VY_PLATFORM_MACOS
 	#define VY_PLATFORM_BSD
 	#define VY_PLATFORM_POSIX
 
 	#define VY_EXPORT __attribute__((visibility("default")))
 	#define VY_IMPORT __attribute__((visibility("default")))
 
+// MARK: EMSCRIPTEN
 #elif defined(__EMSCRIPTEN__)
 	#define VY_PLATFORM_WEB
 	#define VY_PLATFORM_POSIX
@@ -302,44 +237,40 @@ defined(_WIN64)
 #endif
 
 
-#ifndef VY_CHECK_NDK_VER
-	#define VY_CHECK_NDK_VER(ver) 0
-#endif
 
-// Feature checking
+// MARK: Feature checking
 #ifdef __has_cpp_attribute
 	#define VY_HAS_CPP_ATTRIBUTE(attr) __has_cpp_attribute(attr)
 #else
 	#define VY_HAS_CPP_ATTRIBUTE(attr) (0)
 #endif
 
-// "Assume" attribute
+// MARK: "Assume" attribute
 #ifndef VY_NO_ASSUME_ATTRIBUTE
 
-#if VY_CHECK_CPP_VER(VY_CPP23) || VY_HAS_CPP_ATTRIBUTE(assume)
-	#define VY_ASSUME(expr) [[assume(expr)]]
-#endif
-
-
-#ifndef VY_ASSUME
-	#if defined(VY_COMPILER_CLANG)
-		#define VY_ASSUME(expr) __builtin_assume(expr)
+	#if VY_CHECK_CPP_VER(VY_CPP23) || VY_HAS_CPP_ATTRIBUTE(assume)
+		#define VY_ASSUME(expr) [[assume(expr)]]
 	#endif
 
-	#if defined(VY_COMPILER_GCC)
+	#ifndef VY_ASSUME
+		#if defined(VY_COMPILER_CLANG)
+			#define VY_ASSUME(expr) __builtin_assume(expr)
+		#endif
 
-		// __attribute__(assume) is supported starting with GCC 13
-		#if __GNUC__ >= 13
-			#define VY_ASSUME(expr) __attribute__(assume(expr))
+		#if defined(VY_COMPILER_GCC)
+
+			// __attribute__(assume) is supported starting with GCC 13
+			#if __GNUC__ >= 13
+				#define VY_ASSUME(expr) __attribute__(assume(expr))
+			#endif
+
+		#endif
+
+		#if defined(VY_COMPILER_MSVC)
+			#define VY_ASSUME(expr) __assume(expr)
 		#endif
 
 	#endif
-
-	#if defined(VY_COMPILER_MSVC)
-		#define VY_ASSUME(expr) __assume(expr)
-	#endif
-
-#endif
 
 #endif // VY_NO_ASSUME_ATTRIBUTE
 
@@ -349,7 +280,7 @@ defined(_WIN64)
 
 
 
-// "Force inline" attribute
+// MARK: FORCE INLINE
 #ifndef VY_NO_FORCEINLINE_ATTRIBUTE
 
 #ifndef VY_FINLINE
@@ -366,44 +297,46 @@ defined(_WIN64)
 
 #endif // VY_NO_FORCEINLINE_ATTRIBUTE
 
-// "Likely"/"unlikely" attributes
+// MARK: LIKELY / UNLIKELY
 #ifndef VY_NO_LIKELY_ATTRIBUTE
 
-#if VY_CHECK_CPP_VER(VY_CPP20) || VY_HAS_CPP_ATTRIBUTE(likely)
-	#define VY_LIKELY(expr) (expr) [[likely]]
-#endif
-
-#if VY_CHECK_CPP_VER(VY_CPP20) || VY_HAS_CPP_ATTRIBUTE(unlikely)
-	#define VY_UNLIKELY(expr) (expr) [[unlikely]]
-#endif
-
-#if defined(VY_COMPILER_CLANG) || defined(VY_COMPILER_GCC) || defined(VY_COMPILER_ICC)
-
-	#ifndef VY_LIKELY
-		#define VY_LIKELY(expr) (__builtin_expect(!!(expr), 1))
+	#if VY_CHECK_CPP_VER(VY_CPP20) || VY_HAS_CPP_ATTRIBUTE(likely)
+		#define VY_LIKELY(expr) (expr) [[likely]]
 	#endif
 
-	#ifndef VY_UNLIKELY
-		#define VY_UNLIKELY(expr) (__builtin_expect(!!(expr), 0))
+	#if VY_CHECK_CPP_VER(VY_CPP20) || VY_HAS_CPP_ATTRIBUTE(unlikely)
+		#define VY_UNLIKELY(expr) (expr) [[unlikely]]
 	#endif
 
-#endif
+	#if defined(VY_COMPILER_CLANG) || defined(VY_COMPILER_GCC) || defined(VY_COMPILER_ICC)
+
+		#ifndef VY_LIKELY
+			#define VY_LIKELY(expr) (__builtin_expect(!!(expr), 1))
+		#endif
+
+		#ifndef VY_UNLIKELY
+			#define VY_UNLIKELY(expr) (__builtin_expect(!!(expr), 0))
+		#endif
+
+	#endif
 
 #endif // VY_NO_LIKELY_ATTRIBUTE
 
-// Unreachable macro
+
+// MARK: Unreachable macro
 #ifndef VY_NO_UNREACHABLE_MACRO
 
-#if defined(VY_COMPILER_CLANG) || defined(VY_COMPILER_GCC) || defined(VY_COMPILER_ICC)
-	#define VY_UNREACHABLE() __builtin_unreachable()
-#elif defined(VY_COMPILER_MSVC)
-	#define VY_UNREACHABLE() __assume(false)
-#endif
+	#if defined(VY_COMPILER_CLANG) || defined(VY_COMPILER_GCC) || defined(VY_COMPILER_ICC)
+		#define VY_UNREACHABLE() __builtin_unreachable()
+	#elif defined(VY_COMPILER_MSVC)
+		#define VY_UNREACHABLE() __assume(false)
+	#endif
 
 #endif // VY_NO_UNREACHABLE_MACRO
 
-// Fallbacks
 
+
+// MARK: Fallbacks
 #ifndef VY_ASSUME
 	#define VY_ASSUME(expr)
 #endif
@@ -425,56 +358,32 @@ defined(_WIN64)
 #endif
 
 
-// Detect arch
-#ifndef VY_NO_ARCH_DETECTION
+#define VY_NOOP(...) do { (void)0; } while (0)
+#define VY_UNUSED(x) do { (void)(x); } while (0)
+#define VY_UNUSED_2(a, b) VY_UNUSED(a); VY_UNUSED(b)
+#define VY_UNUSED_3(a, b, c) VY_UNUSED_2(a, b); VY_UNUSED(c)
+#define VY_UNUSED_4(a, b, c, d) VY_UNUSED_3(a, b, c); VY_UNUSED(d)
+#define VY_UNUSED_5(a, b, c, d, e) VY_UNUSED_4(a, b, c, d); VY_UNUSED(e)
+#define VY_UNUSED_6(a, b, c, d, e, f) VY_UNUSED_5(a, b, c, d, e); VY_UNUSED(f)
+#define VY_UNUSED_7(a, b, c, d, e, f, g) VY_UNUSED_6(a, b, c, d, e, f); VY_UNUSED(g)
 
-	#if defined(__arm__) || defined(__thumb__) || defined(__ARM_ARCH_7__) || defined(_M_ARM)
-		#define VY_ARCH_arm
-	#endif
+#ifdef VY_COMPILER_MSVC
+	#define VY_LIKELY(x) (x)
+	#define VY_UNLIKELY(x) (x)
+	#define VY_UNREACHABLE() __assume(0)
+	#define VY_ALIGN_DECL(align_, decl) __declspec(align(align_)) decl
+	#define VY_THREAD __declspec(thread)
 
-	#if defined(__aarch64__) || defined(_M_ARM64) || defined(_M_ARM64EC) || defined(__arm64__)
-		#define VY_ARCH_aarch64
-	#endif
+#elif defined(VY_COMPILER_GCC) || defined(VY_COMPILER_CLANG)
+	#define VY_LIKELY(x)               __builtin_expect((x), 1)
+	#define VY_UNLIKELY(x)             __builtin_expect((x), 0)
+	#define VY_UNREACHABLE()           __builtin_unreachable()
+	#define VY_ALIGN_DECL(align, decl) decl __attribute__ ((aligned(align)))
+	#define VY_THREAD                  __thread
 
-	#if defined(__amd64__) || defined(__amd64) || defined(__x86_64__) || defined(__x86_64) || defined(_M_AMD64) || defined (_M_X64)
-		#define VY_ARCH_x86_64
-	#endif
-
-	#if defined(__i386__) || defined(_M_IX86) || defined(_X86_)
-		#define VY_ARCH_x86
-	#endif
-
-	#if defined(__wasm32__)
-		#define VY_ARCH_wasm32
-	#endif
-
-	#if defined(__wasm64__)
-		#define VY_ARCH_wasm64
-	#endif
-
-	#if defined(VY_ARCH_arm)     \
-	  + defined(VY_ARCH_aarch64) \
-	  + defined(VY_ARCH_x86_64)  \
-	  + defined(VY_ARCH_x86)     \
-	  + defined(VY_ARCH_wasm32)  \
-	  + defined(VY_ARCH_wasm64)  \
-    != 1
-
-	#error No or multiple arch detected! Please open an issue with details about your target system. You can define VY_NO_ARCH_DETECTION to bypass this error.
-
-	#endif
-
-#endif // VY_NO_ARCH_DETECTION
-
-
-// A bunch of useful macros
-#define VyLibPrefix(a, prefix) prefix ## a
-#define VyLibPrefixMacro(a, prefix) VyLibPrefix(a, prefix)
-#define VyLibSuffix(a, suffix) a ## suffix
-#define VyLibSuffixMacro(a, suffix) VyLibSuffix(a, suffix)
-#define VyLibStringify(s) #s
-#define VyLibStringifyMacro(s) VyLibStringify(s) // http://gcc.gnu.org/onlinedocs/cpp/Stringification.html#Stringification
-#define VyLibUnused(a) (void) a
+#else
+	Unknown compiler
+#endif
 
 
 
